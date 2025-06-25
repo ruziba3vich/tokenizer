@@ -1,0 +1,127 @@
+definitions:
+  models.LoginPayload:
+    properties:
+      email:
+        example: john@example.com
+        type: string
+      password:
+        example: securepassword123
+        type: string
+    type: object
+  models.RegisterPayload:
+    properties:
+      email:
+        example: john@example.com
+        type: string
+      first_name:
+        example: John
+        type: string
+      key:
+        example: abc123
+        type: string
+      last_name:
+        example: Doe
+        type: string
+      password:
+        example: securepassword123
+        type: string
+      phone:
+        example: "+998901234567"
+        type: string
+      username:
+        example: johndoe
+        type: string
+    type: object
+  models.User:
+    properties:
+      email:
+        example: john@example.com
+        type: string
+      first_name:
+        example: John
+        type: string
+      id:
+        example: 1
+        type: integer
+      last_name:
+        example: Doe
+        type: string
+      password:
+        example: password
+        type: string
+      phone:
+        example: "+998901234567"
+        type: string
+      username:
+        example: johndoe
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user using email and password
+      parameters:
+      - description: Login credentials
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: 'error: invalid request'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: 'error: invalid email or password'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login user
+      tags:
+      - Auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Registers a user using a one-time key. Key must not have been used
+        before.
+      parameters:
+      - description: User registration data
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: user registered successfully'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: 'error: invalid request or key already used'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register a new user
+      tags:
+      - Auth
+swagger: "2.0"
