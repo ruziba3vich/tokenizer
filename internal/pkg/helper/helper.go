@@ -41,7 +41,7 @@ func NewDB() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	err = db.AutoMigrate(&models.OneTimeLink{})
+	err = db.AutoMigrate(&models.OneTimeLink{}, &models.User{})
 	if err != nil {
 		log.Fatalf("AutoMigration failed: %v", err)
 		return nil, err
