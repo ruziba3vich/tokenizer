@@ -47,6 +47,18 @@ func NewDB() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	log.Println("Migration successful")
+	err = db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users (email)").Error
+	if err != nil {
+		log.Printf("Failed to create email index: %v", err)
+		return nil, err
+	}
+
+	err = db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users (username)").Error
+	if err != nil {
+		log.Printf("Failed to create username index: %v", err)
+		return nil, err
+	}
+
+	log.Println("Migration and indexing successful")
 	return db, nil
 }

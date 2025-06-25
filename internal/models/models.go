@@ -25,12 +25,12 @@ type LoginPayload struct {
 
 // User represents the returned user
 type User struct {
-	ID        uint   `json:"id" example:"1"`
+	ID        uint   `json:"id" example:"1" gorm:"primaryKey"`
 	FirstName string `json:"first_name" example:"John"`
 	LastName  string `json:"last_name" example:"Doe"`
-	Email     string `json:"email" example:"john@example.com"`
+	Email     string `json:"email" example:"john@example.com" gorm:"uniqueIndex:idx_user_email;not null"`
 	Phone     string `json:"phone,omitempty" example:"+998901234567"`
-	Username  string `json:"username" example:"johndoe"`
+	Username  string `json:"username" example:"johndoe" gorm:"uniqueIndex:idx_user_username;not null"`
 	Password  string `json:"password" example:"password"`
 }
 
