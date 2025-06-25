@@ -14,7 +14,7 @@ type RegisterPayload struct {
 	Phone     string `json:"phone,omitempty" example:"+998901234567"`
 	Username  string `json:"username" example:"johndoe"`
 	Password  string `json:"password" example:"securepassword123"`
-	Key       string `json:"key" example:"abc123"`
+	Key       string `json:"invitation_key" example:"abc123"`
 }
 
 // LoginPayload represents login input
@@ -32,4 +32,9 @@ type User struct {
 	Phone     string `json:"phone,omitempty" example:"+998901234567"`
 	Username  string `json:"username" example:"johndoe"`
 	Password  string `json:"password" example:"password"`
+}
+
+type GenerateResponse struct {
+	Error string `json:"error,omitempty"`
+	URL   string `json:"url,omitempty"`
 }

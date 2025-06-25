@@ -139,7 +139,7 @@ const docTemplate = `{
                     "type": "string",
                     "example": "John"
                 },
-                "key": {
+                "invitation_key": {
                     "type": "string",
                     "example": "abc123"
                 },

@@ -16,7 +16,7 @@ definitions:
       first_name:
         example: John
         type: string
-      key:
+      invitation_key:
         example: abc123
         type: string
       last_name:
