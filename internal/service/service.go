@@ -39,7 +39,7 @@ func (h *Service) GenerateOneTimeLink() (string, error) {
 		return "", err
 	}
 
-	url := fmt.Sprintf("http://localhost:5174/key/%s", key)
+	url := fmt.Sprintf("https://fintrack.vintorum.com/key/%s", key)
 	return url, nil
 }
 
