@@ -122,7 +122,7 @@ func StartBot() {
 			return c.Send("❌ Error: " + result.Error)
 		}
 
-		return c.Send(fmt.Sprintf("✅ Your one-time link: ```%s```\n", result.URL))
+		return c.Send(fmt.Sprintf("✅ Your one-time link: \n%s\n", result.URL))
 	})
 
 	// Add a catch-all handler for debugging
