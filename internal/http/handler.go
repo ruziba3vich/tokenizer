@@ -137,7 +137,7 @@ type ResponsePayload struct {
 }
 
 type Request struct {
-	Vhid string `json:"vhid"`
+	Vhid string `json:"hwid"`
 }
 
 type SignedResponse struct {
