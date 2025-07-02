@@ -142,8 +142,8 @@ func StartBot() {
 }
 
 // Load private key from PEM file
-func loadPrivateKey(path string) (*rsa.PrivateKey, error) {
-	data, err := os.ReadFile(path)
+func loadPrivateKey() (*rsa.PrivateKey, error) {
+	data, err := os.ReadFile("private_key.pem")
 	if err != nil {
 		return nil, err
 	}
