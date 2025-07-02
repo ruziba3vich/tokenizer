@@ -1,10 +1,15 @@
 package main
 
 import (
+	"crypto/rsa"
+	"crypto/x509"
 	"encoding/json"
+	"encoding/pem"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -50,6 +55,7 @@ func main() {
 			NewLogger,
 			helper.NewDB,
 			service.NewService,
+			loadPrivateKey,
 			handler.NewHandler,
 		),
 		fx.Invoke(
@@ -133,4 +139,35 @@ func StartBot() {
 
 	log.Println("Bot is running...")
 	bot.Start() // This call is blocking and keeps the bot running
+}
+
+// Load private key from PEM file
+func loadPrivateKey(path string) (*rsa.PrivateKey, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	block, _ := pem.Decode(data)
+	if block == nil {
+		return nil, errors.New("invalid PEM format")
+	}
+
+	var parsedKey any
+	if block.Type == "PRIVATE KEY" {
+		parsedKey, err = x509.ParsePKCS8PrivateKey(block.Bytes)
+	} else if block.Type == "RSA PRIVATE KEY" {
+		parsedKey, err = x509.ParsePKCS1PrivateKey(block.Bytes)
+	} else {
+		return nil, errors.New("unsupported key type: " + block.Type)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	rsaKey, ok := parsedKey.(*rsa.PrivateKey)
+	if !ok {
+		return nil, errors.New("not RSA private key")
+	}
+	return rsaKey, nil
 }

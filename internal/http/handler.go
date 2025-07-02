@@ -1,6 +1,11 @@
 package handler
 
 import (
+	"crypto"
+	"crypto/rsa"
+	"crypto/sha256"
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -11,14 +16,16 @@ import (
 )
 
 type Handler struct {
-	service *service.Service
-	logger  *lgg.Logger
+	service    *service.Service
+	logger     *lgg.Logger
+	privateKey *rsa.PrivateKey
 }
 
-func NewHandler(service *service.Service, logger *lgg.Logger) *Handler {
+func NewHandler(service *service.Service, privateKey *rsa.PrivateKey, logger *lgg.Logger) *Handler {
 	return &Handler{
-		service: service,
-		logger:  logger,
+		service:    service,
+		logger:     logger,
+		privateKey: privateKey,
 	}
 }
 
@@ -68,7 +75,7 @@ func (h *Handler) RegisterUser(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param payload body models.LoginPayload true "Login credentials"
-// @Success 200 {object} models.User
+// @Success 200 {object} SignedResponse
 // @Failure 400 {object} map[string]string "error: invalid request"
 // @Failure 401 {object} map[string]string "error: invalid email or password"
 // @Router /login [post]
@@ -83,9 +90,61 @@ func (h *Handler) Login(c *gin.Context) {
 	user, err := h.service.GetUserByEmailAndPassword(payload.Email, payload.Password)
 	if err != nil {
 		h.logger.Println("Login failed:", err)
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid email or password"})
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	// 2. Create signed payload
+	responsePayload := ResponsePayload{
+		Status: "APPROVED",
+	}
+	toSign := struct {
+		Status string `json:"status"`
+		Vhid   string `json:"vhid"`
+	}{
+		Status: responsePayload.Status,
+		Vhid:   payload.Vhid,
+	}
+
+	dataToSign, err := json.Marshal(toSign)
+	if err != nil {
+		h.logger.Println("Failed to marshal payload:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to marshal payload"})
+		return
+	}
+
+	hash := sha256.Sum256(dataToSign)
+	signature, err := rsa.SignPKCS1v15(nil, h.privateKey, crypto.SHA256, hash[:])
+	if err != nil {
+		h.logger.Println("Failed to sign payload:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create signature"})
+		return
+	}
+
+	sigBase64 := base64.StdEncoding.EncodeToString(signature)
+
+	// 3. Return response
+	response := SignedResponse{
+		Payload:   responsePayload,
+		Signature: sigBase64,
+		Vhid:      payload.Vhid,
+		User:      user,
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
+type ResponsePayload struct {
+	Status string `json:"status"`
+}
+
+type Request struct {
+	Vhid string `json:"vhid"`
+}
+
+type SignedResponse struct {
+	Payload   ResponsePayload `json:"payload"`
+	Signature string          `json:"signature"`
+	Vhid      string          `json:"vhid"`
+	User      *models.User    `json:"user"`
 }

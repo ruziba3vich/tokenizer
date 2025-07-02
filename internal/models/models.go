@@ -21,6 +21,7 @@ type RegisterPayload struct {
 type LoginPayload struct {
 	Email    string `json:"email" example:"john@example.com"`
 	Password string `json:"password" example:"securepassword123"`
+	Vhid     string `json:"vhid"`
 }
 
 // User represents the returned user

@@ -43,7 +43,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/handler.SignedResponse"
                         }
                     },
                     "400": {
@@ -115,6 +115,31 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "handler.ResponsePayload": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.SignedResponse": {
+            "type": "object",
+            "properties": {
+                "payload": {
+                    "$ref": "#/definitions/handler.ResponsePayload"
+                },
+                "signature": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "vhid": {
+                    "type": "string"
+                }
+            }
+        },
         "models.LoginPayload": {
             "type": "object",
             "properties": {
@@ -125,6 +150,9 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "example": "securepassword123"
+                },
+                "vhid": {
+                    "type": "string"
                 }
             }
         },
