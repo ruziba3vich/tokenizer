@@ -16,10 +16,10 @@ definitions:
       email:
         example: john@example.com
         type: string
+      hwid:
+        type: string
       password:
         example: securepassword123
-        type: string
-      vhid:
         type: string
     type: object
   models.RegisterPayload:

@@ -141,12 +141,12 @@ const docTemplate = `{
                     "type": "string",
                     "example": "john@example.com"
                 },
+                "hwid": {
+                    "type": "string"
+                },
                 "password": {
                     "type": "string",
                     "example": "securepassword123"
-                },
-                "vhid": {
-                    "type": "string"
                 }
             }
         },
