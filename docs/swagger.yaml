@@ -10,10 +10,6 @@ definitions:
         $ref: '#/definitions/handler.ResponsePayload'
       signature:
         type: string
-      user:
-        $ref: '#/definitions/models.User'
-      vhid:
-        type: string
     type: object
   models.LoginPayload:
     properties:
@@ -42,30 +38,6 @@ definitions:
         type: string
       password:
         example: securepassword123
-        type: string
-      phone:
-        example: "+998901234567"
-        type: string
-      username:
-        example: johndoe
-        type: string
-    type: object
-  models.User:
-    properties:
-      email:
-        example: john@example.com
-        type: string
-      first_name:
-        example: John
-        type: string
-      id:
-        example: 1
-        type: integer
-      last_name:
-        example: Doe
-        type: string
-      password:
-        example: password
         type: string
       phone:
         example: "+998901234567"

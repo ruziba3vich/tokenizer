@@ -87,7 +87,7 @@ func (h *Handler) Login(c *gin.Context) {
 		return
 	}
 
-	user, err := h.service.GetUserByEmailAndPassword(payload.Email, payload.Password)
+	_, err := h.service.GetUserByEmailAndPassword(payload.Email, payload.Password)
 	if err != nil {
 		h.logger.Println("Login failed:", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid email or password"})
@@ -127,8 +127,6 @@ func (h *Handler) Login(c *gin.Context) {
 	response := SignedResponse{
 		Payload:   responsePayload,
 		Signature: sigBase64,
-		Vhid:      payload.Vhid,
-		User:      user,
 	}
 
 	c.JSON(http.StatusOK, response)
@@ -145,6 +143,4 @@ type Request struct {
 type SignedResponse struct {
 	Payload   ResponsePayload `json:"payload"`
 	Signature string          `json:"signature"`
-	Vhid      string          `json:"vhid"`
-	User      *models.User    `json:"user"`
 }

@@ -131,12 +131,6 @@ const docTemplate = `{
                 },
                 "signature": {
                     "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/models.User"
-                },
-                "vhid": {
-                    "type": "string"
                 }
             }
         },
@@ -178,39 +172,6 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "example": "securepassword123"
-                },
-                "phone": {
-                    "type": "string",
-                    "example": "+998901234567"
-                },
-                "username": {
-                    "type": "string",
-                    "example": "johndoe"
-                }
-            }
-        },
-        "models.User": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "john@example.com"
-                },
-                "first_name": {
-                    "type": "string",
-                    "example": "John"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "last_name": {
-                    "type": "string",
-                    "example": "Doe"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "password"
                 },
                 "phone": {
                     "type": "string",
